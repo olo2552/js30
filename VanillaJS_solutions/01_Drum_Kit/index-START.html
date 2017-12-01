@@ -7,7 +7,7 @@
 </head>
 <body>
 
-
+<!-- for me .keys can be section and .key can be article, it's more sematic friendly-->
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -47,18 +47,44 @@
     </div>
   </div>
 
-  <audio data-key="65" src="sounds/clap.wav"></audio>
-  <audio data-key="83" src="sounds/hihat.wav"></audio>
-  <audio data-key="68" src="sounds/kick.wav"></audio>
-  <audio data-key="70" src="sounds/openhat.wav"></audio>
-  <audio data-key="71" src="sounds/boom.wav"></audio>
-  <audio data-key="72" src="sounds/ride.wav"></audio>
-  <audio data-key="74" src="sounds/snare.wav"></audio>
-  <audio data-key="75" src="sounds/tom.wav"></audio>
-  <audio data-key="76" src="sounds/tink.wav"></audio>
+  <audio data-key="65" preload="auto" src="sounds/clap.wav"></audio>
+  <audio data-key="83" preload="auto" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" preload="auto" src="sounds/kick.wav"></audio>
+  <audio data-key="70" preload="auto" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" preload="auto" src="sounds/boom.wav"></audio>
+  <audio data-key="72" preload="auto" src="sounds/ride.wav"></audio>
+  <audio data-key="74" preload="auto" src="sounds/snare.wav"></audio>
+  <audio data-key="75" preload="auto" src="sounds/tom.wav"></audio>
+  <audio data-key="76" preload="auto" src="sounds/tink.wav"></audio>
 
 <script>
+  document.addEventListener('keypress', ev => {
+    const pressedChar = ev.key.toUpperCase();
+    const button = document.querySelector(`.key[data-key="${pressedChar.charCodeAt(0)}"]`);
 
+//    escaping keys not attached to buttons
+    if (!button) return;
+
+    button.classList.add('playing');
+
+    const audio = document.querySelector(`audio[data-key="${pressedChar.charCodeAt(0)}"]`);
+
+//    escaping keys not attached to buttons
+    if(!audio) return;
+
+    audio.currentTime = 0;
+    audio.play();
+
+  });
+
+
+//  1. although keyup event is more intuitive from the code perspective, it is less performant, because triggers the event for unnecessary key
+//  could be optimized by extracting callback for transitionend to a function, but seem unnecessary for me
+  document.querySelectorAll('.key').forEach(elem => {
+      elem.addEventListener('transitionend', function() {
+        this.classList.remove('playing');
+    });
+  });
 </script>
 
 
